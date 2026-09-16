@@ -145,8 +145,14 @@ def get_movie(movie_id):
 
 
 def get_trending(limit=8):
-    """Top rated movies, used on the home page."""
+    """Top rated movies, used on the home page and the trending page."""
     return _records(movies.sort_values("rating", ascending=False).head(limit))
+
+
+def get_recent(limit=12):
+    """Newest releases, highest rated first within the same year."""
+    ordered = movies.sort_values(["year", "rating"], ascending=[False, False])
+    return _records(ordered.head(limit))
 
 
 def _collect_genres():

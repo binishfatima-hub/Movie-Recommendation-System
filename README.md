@@ -153,6 +153,7 @@ templates/
     base.html           Shared topbar + sidebar + footer
     _movie_card.html    Shared movie card
     index.html          Home (hero, top rated, genres)
+    trending.html       Top rated + latest releases
     movies.html         Full collection + filters
     movie_details.html  Details + inline trailer + similar movies
     search.html         AI recommendations

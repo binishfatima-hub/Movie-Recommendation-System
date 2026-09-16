@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% set active_page = 'trending' %}
+
+{% block title %}Trending | MovieFlix{% endblock %}
+
+
+{% block content %}
+
+
+<div class="page-head">
+
+    <span class="small-title">RIGHT NOW</span>
+
+    <h1>🔥 <span>Trending</span> on MovieFlix</h1>
+
+    <p>
+        The highest rated titles in the collection, plus everything that
+        landed most recently.
+    </p>
+
+    <div class="count-pill">🎬 {{ movie_total }} movies in the library</div>
+
+</div>
+
+
+<section class="movie-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="small-title">MOST LOVED</span>
+            <h2>⭐ Top Rated</h2>
+        </div>
+
+        <a href="{{ url_for('movies_page') }}" class="view-all">Browse all →</a>
+    </div>
+
+    <div class="movie-grid">
+        {% for movie in top_rated %}
+            {% include "_movie_card.html" %}
+        {% endfor %}
+    </div>
+
+</section>
+
+
+<section class="movie-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="small-title">FRESH RELEASES</span>
+            <h2>🆕 Latest Movies</h2>
+        </div>
+    </div>
+
+    <div class="movie-grid">
+        {% for movie in latest %}
+            {% include "_movie_card.html" %}
+        {% endfor %}
+    </div>
+
+</section>
+
+
+<section class="ai-banner">
+
+    <div>
+        <span>🤖 SMART RECOMMENDATION ENGINE</span>
+        <h2>Not sure what to watch?</h2>
+        <p>
+            Open any movie above and MovieFlix will find titles with similar
+            genres and stories using TF-IDF and cosine similarity.
+        </p>
+    </div>
+
+    <a href="{{ url_for('movies_page') }}">Explore Movies →</a>
+
+</section>
+
+
+{% endblock %}

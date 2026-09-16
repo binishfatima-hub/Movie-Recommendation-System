@@ -143,6 +143,10 @@ function moviesByGenre(genre) {
 
 const byRating = list => list.slice().sort((a, b) => b.rating - a.rating);
 
+/** Newest first, best rated first within the same year. */
+const byYear = list =>
+    list.slice().sort((a, b) => b.year - a.year || b.rating - a.rating);
+
 
 /* ---------------------------------------------------------
    accounts  (demo only - see the note on the sign-in card)
@@ -299,6 +303,47 @@ function viewHome() {
             '<h2>Let AI Find Your Next Movie</h2>' +
             '<p>Every movie is converted into a TF-IDF vector built from its ' +
                'genres and plot. Cosine similarity then ranks the closest matches.</p>' +
+        '</div>' +
+        '<a href="#/movies">Explore Movies →</a>' +
+    '</section>' +
+
+    footer();
+}
+
+
+function viewTrending() {
+    return '' +
+    '<div class="page-head">' +
+        '<span class="small-title">RIGHT NOW</span>' +
+        '<h1>🔥 <span>Trending</span> on MovieFlix</h1>' +
+        '<p>The highest rated titles in the collection, plus everything that ' +
+           'landed most recently.</p>' +
+        '<div class="count-pill">🎬 ' + MOVIES.length + ' movies in the library</div>' +
+    '</div>' +
+
+    '<section class="movie-section">' +
+        '<div class="section-heading">' +
+            '<div><span class="small-title">MOST LOVED</span>' +
+                 '<h2>⭐ Top Rated</h2></div>' +
+            '<a href="#/movies" class="view-all">Browse all →</a>' +
+        '</div>' +
+        grid(byRating(MOVIES).slice(0, 12)) +
+    '</section>' +
+
+    '<section class="movie-section">' +
+        '<div class="section-heading">' +
+            '<div><span class="small-title">FRESH RELEASES</span>' +
+                 '<h2>🆕 Latest Movies</h2></div>' +
+        '</div>' +
+        grid(byYear(MOVIES).slice(0, 12)) +
+    '</section>' +
+
+    '<section class="ai-banner">' +
+        '<div>' +
+            '<span>🤖 SMART RECOMMENDATION ENGINE</span>' +
+            '<h2>Not sure what to watch?</h2>' +
+            '<p>Open any movie above and MovieFlix will find titles with ' +
+               'similar genres and stories using TF-IDF and cosine similarity.</p>' +
         '</div>' +
         '<a href="#/movies">Explore Movies →</a>' +
     '</section>' +
@@ -540,7 +585,13 @@ function viewGenres() {
 function parseHash() {
     const raw = location.hash.replace(/^#\/?/, '');
     const [path, search] = raw.split('?');
-    return { path: path.replace(/\/$/, ''), params: new URLSearchParams(search || '') };
+
+    return {
+        // A stray leading "#" (an old "#/#trending" style link) would otherwise
+        // never match a route and fall through to the 404 view.
+        path: path.replace(/^#+/, '').replace(/\/$/, ''),
+        params: new URLSearchParams(search || '')
+    };
 }
 
 function render() {
@@ -557,6 +608,8 @@ function render() {
 
     if (path === '' || path === 'home') {
         html = viewHome(); active = 'home';
+    } else if (path === 'trending') {
+        html = viewTrending(); active = 'trending';
     } else if (path === 'movies') {
         html = viewMovies(params); active = 'movies';
     } else if (path === 'genres') {

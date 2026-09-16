@@ -31,6 +31,7 @@ from recommendation import (
     get_genres,
     get_movie,
     get_movies_by_genre,
+    get_recent,
     get_trending,
     recommend_by_id,
     recommend_movies,
@@ -192,6 +193,20 @@ def home():
         "index.html",
         trending=get_trending(8),
         genres=get_genres(),
+    )
+
+
+# ==========================================
+# TRENDING
+# ==========================================
+
+@app.route("/trending")
+@login_required
+def trending_page():
+    return render_template(
+        "trending.html",
+        top_rated=get_trending(12),
+        latest=get_recent(12),
     )
 
 
