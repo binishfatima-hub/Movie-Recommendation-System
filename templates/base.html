@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}MovieFlix{% endblock %}</title>
+
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block head %}{% endblock %}
+
+</head>
+
+
+<body>
+
+
+<!-- ================= TOP BAR ================= -->
+
+<header class="topbar">
+
+    <button class="menu-toggle"
+            type="button"
+            aria-label="Toggle menu"
+            onclick="document.body.classList.toggle('sidebar-open')">
+        ☰
+    </button>
+
+    <a href="{{ url_for('home') }}" class="brand">
+        🎬 <span>Movie</span>Flix
+    </a>
+
+    <nav class="top-links">
+        <a href="{{ url_for('home') }}"
+           class="{{ 'active' if active_page == 'home' }}">Home</a>
+
+        <a href="{{ url_for('home') }}#trending">Trending</a>
+
+        <a href="{{ url_for('movies_page') }}"
+           class="{{ 'active' if active_page == 'movies' }}">Movies</a>
+
+        <a href="{{ url_for('home') }}#genres">Genres</a>
+    </nav>
+
+    {# On the search page `movie` is the typed query; on the details page it is
+       the movie itself, so only pre-fill when it is actually text. #}
+    <form class="top-search" action="{{ url_for('search') }}" method="GET" role="search">
+        <input type="text"
+               name="movie"
+               placeholder="Search movies..."
+               aria-label="Search movies"
+               value="{{ movie if movie is string else '' }}"
+               required>
+        <button type="submit" aria-label="Search">🔍</button>
+    </form>
+
+    <div class="topbar-user">
+        <span class="topbar-name" title="{{ username }}">👤 {{ username }}</span>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        <a href="{{ url_for('exit_page') }}" class="exit-btn">Exit</a>
+    </div>
+
+</header>
+
+
+<div class="main-layout">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <div class="sidebar-backdrop"
+         onclick="document.body.classList.remove('sidebar-open')"></div>
+
+    <aside class="sidebar">
+
+        <div class="sidebar-scroll">
+
+            <div class="sidebar-title">MENU</div>
+
+            <a href="{{ url_for('home') }}"
+               class="side-link {{ 'active' if active_page == 'home' }}">
+                🏠 <span>Home</span>
+            </a>
+
+            <a href="{{ url_for('home') }}#trending" class="side-link">
+                🔥 <span>Trending</span>
+            </a>
+
+            <a href="{{ url_for('movies_page') }}"
+               class="side-link {{ 'active' if active_page == 'movies' }}">
+                🎬 <span>Movies</span>
+            </a>
+
+            <a href="{{ url_for('home') }}#genres" class="side-link">
+                🎭 <span>Genres</span>
+            </a>
+
+            <div class="sidebar-title sidebar-title-gap">TOP GENRES</div>
+
+            <div class="sidebar-genres">
+                {% for genre in all_genres[:8] %}
+                    <a href="{{ url_for('movies_page', genre=genre) }}"
+                       class="genre-chip {{ 'active' if active_genre == genre }}">
+                        {{ genre }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="sidebar-title sidebar-title-gap">AI RECOMMENDER</div>
+
+            <div class="ai-box">
+                <div class="ai-icon">🤖</div>
+                <h3>AI Recommendations</h3>
+                <p>
+                    Open any movie and MovieFlix finds
+                    similar titles using TF-IDF and
+                    cosine similarity.
+                </p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span>MovieFlix</span>
+                <small>{{ movie_total }} movies • College Project</small>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <main class="content">
+        {% block content %}{% endblock %}
+
+        <footer>
+            <div class="footer-brand">🎬 MovieFlix</div>
+            <p>AI Powered Movie Recommendation System</p>
+            <small>Logged in as {{ username }}</small><br>
+            <small>© 2026 MovieFlix • College Project</small>
+        </footer>
+    </main>
+
+
+</div>
+
+{% block scripts %}{% endblock %}
+
+</body>
+
+</html>

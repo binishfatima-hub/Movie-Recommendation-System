@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MovieFlix - AI Movie Recommendation System</title>
+
+    <meta name="description"
+          content="AI powered movie recommendation system using TF-IDF and cosine similarity.">
+
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ============================================================
+     AUTH SCREEN  (shown until the visitor "signs in")
+     ============================================================ -->
+
+<div id="authScreen" class="login-page" hidden>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="login-logo">🎬 <span>Movie</span>Flix</div>
+
+            <p class="login-subtitle">AI Powered Movie Recommendation System</p>
+
+            <h1 id="authTitle">Welcome Back</h1>
+
+            <p class="login-text" id="authSubtitle">Sign in to continue to MovieFlix</p>
+
+            <div id="authMessage" hidden></div>
+
+            <form id="authForm" autocomplete="off">
+
+                <label for="authUser">Username</label>
+                <input type="text"
+                       id="authUser"
+                       placeholder="Enter your username"
+                       minlength="3"
+                       maxlength="20"
+                       required>
+
+                <label for="authPass">Password</label>
+                <input type="password"
+                       id="authPass"
+                       placeholder="Enter your password"
+                       minlength="4"
+                       required>
+
+                <div id="confirmRow" hidden>
+                    <label for="authConfirm">Confirm Password</label>
+                    <input type="password"
+                           id="authConfirm"
+                           placeholder="Re-enter your password"
+                           minlength="4">
+                </div>
+
+                <button type="submit" class="login-button" id="authSubmit">Login →</button>
+
+            </form>
+
+            <div class="register-link">
+                <span id="authSwitchText">Don't have an account?</span>
+                <a href="#" id="authSwitch">Create Account</a>
+            </div>
+
+            <!-- Being upfront: this build has no server, so the sign-in is
+                 only a demo. The Flask version does it properly. -->
+            <div class="demo-note">
+                <strong>⚠️ Demo sign-in</strong>
+                This is the static build — there is no server, so accounts are
+                stored only in this browser and the sign-in can be bypassed.
+                Use the Flask version for real authentication.
+            </div>
+
+            <div class="login-footer">
+                <p>🎬 MovieFlix</p>
+                <small>AI Movie Recommendation System</small><br>
+                <small>© 2026 College Project</small>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     APP SHELL
+     ============================================================ -->
+
+<div id="appShell" hidden>
+
+    <header class="topbar">
+
+        <button class="menu-toggle" type="button" aria-label="Toggle menu"
+                onclick="document.body.classList.toggle('sidebar-open')">☰</button>
+
+        <a href="#/" class="brand">🎬 <span>Movie</span>Flix</a>
+
+        <nav class="top-links">
+            <a href="#/" data-nav="home">Home</a>
+            <a href="#/movies" data-nav="movies">Movies</a>
+            <a href="#/genres" data-nav="genres">Genres</a>
+        </nav>
+
+        <form class="top-search" id="topSearch" role="search">
+            <input type="text" id="topSearchInput"
+                   placeholder="Search movies..." aria-label="Search movies" required>
+            <button type="submit" aria-label="Search">🔍</button>
+        </form>
+
+        <div class="topbar-user">
+            <span class="topbar-name" id="userLabel"></span>
+            <a href="#" class="logout-btn" id="logoutLink">Logout</a>
+            <a href="#/exit" class="exit-btn">Exit</a>
+        </div>
+
+    </header>
+
+
+    <div class="main-layout">
+
+        <div class="sidebar-backdrop"
+             onclick="document.body.classList.remove('sidebar-open')"></div>
+
+        <aside class="sidebar">
+            <div class="sidebar-scroll">
+
+                <div class="sidebar-title">MENU</div>
+
+                <a href="#/" class="side-link" data-nav="home">🏠 <span>Home</span></a>
+                <a href="#/#trending" class="side-link">🔥 <span>Trending</span></a>
+                <a href="#/movies" class="side-link" data-nav="movies">🎬 <span>Movies</span></a>
+                <a href="#/genres" class="side-link" data-nav="genres">🎭 <span>Genres</span></a>
+
+                <div class="sidebar-title sidebar-title-gap">TOP GENRES</div>
+                <div class="sidebar-genres" id="sidebarGenres"></div>
+
+                <div class="sidebar-title sidebar-title-gap">AI RECOMMENDER</div>
+
+                <div class="ai-box">
+                    <div class="ai-icon">🤖</div>
+                    <h3>AI Recommendations</h3>
+                    <p>
+                        Open any movie and MovieFlix finds similar titles using
+                        TF-IDF and cosine similarity.
+                    </p>
+                </div>
+
+                <div class="sidebar-bottom">
+                    <span>MovieFlix</span>
+                    <small id="sidebarCount">College Project</small>
+                </div>
+
+            </div>
+        </aside>
+
+        <main class="content" id="view"></main>
+
+    </div>
+
+</div>
+
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+
+</body>
+
+</html>

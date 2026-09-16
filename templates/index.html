@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% set active_page = 'home' %}
+
+{% block title %}MovieFlix - AI Movie Recommendation System{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="hero-badge">🤖 AI POWERED MOVIE RECOMMENDATIONS</span>
+
+        <h1>Find Your Next <span>Favorite Movie</span></h1>
+
+        <p>
+            Welcome <strong>{{ username }}</strong>!
+            Search any of our {{ movie_total }} movies and the AI will
+            recommend titles with similar genres and stories.
+        </p>
+
+        <form action="{{ url_for('search') }}" method="GET" class="big-search">
+            <input type="text"
+                   name="movie"
+                   placeholder="Try &quot;Inception&quot;, &quot;Dangal&quot; or &quot;Toy Story&quot;..."
+                   aria-label="Search for a movie"
+                   required>
+            <button type="submit">🔍 Search</button>
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- ================= TRENDING ================= -->
+
+<section id="trending" class="movie-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="small-title">NOW WATCHING</span>
+            <h2>🔥 Top Rated Movies</h2>
+        </div>
+
+        <a href="{{ url_for('movies_page') }}" class="view-all">Explore All →</a>
+    </div>
+
+    <div class="movie-grid">
+        {% for movie in trending %}
+            {% include "_movie_card.html" %}
+        {% endfor %}
+    </div>
+
+</section>
+
+
+<!-- ================= GENRES ================= -->
+
+<section id="genres" class="genre-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="small-title">EXPLORE</span>
+            <h2>🎭 Browse Genres</h2>
+        </div>
+    </div>
+
+    <div class="genre-grid">
+        {% for genre in genres %}
+            <a class="genre-card" href="{{ url_for('movies_page', genre=genre) }}">
+                <span class="genre-emoji">
+                    {%- if genre == 'Action' %}💥
+                    {%- elif genre == 'Adventure' %}🧭
+                    {%- elif genre == 'Animation' %}🎨
+                    {%- elif genre == 'Biography' %}📖
+                    {%- elif genre == 'Comedy' %}😂
+                    {%- elif genre == 'Crime' %}🔫
+                    {%- elif genre == 'Drama' %}🎭
+                    {%- elif genre == 'Family' %}👨‍👩‍👧
+                    {%- elif genre == 'Fantasy' %}🧙
+                    {%- elif genre == 'History' %}🏛️
+                    {%- elif genre == 'Horror' %}👻
+                    {%- elif genre == 'Music' %}🎵
+                    {%- elif genre == 'Mystery' %}🕵️
+                    {%- elif genre == 'Romance' %}❤️
+                    {%- elif genre == 'Sci-Fi' %}🚀
+                    {%- elif genre == 'Sport' %}🏅
+                    {%- elif genre == 'Thriller' %}😱
+                    {%- elif genre == 'War' %}⚔️
+                    {%- elif genre == 'Western' %}🤠
+                    {%- else %}🎬
+                    {%- endif %}
+                </span>
+                <span class="genre-name">{{ genre }}</span>
+            </a>
+        {% endfor %}
+    </div>
+
+</section>
+
+
+<!-- ================= AI BANNER ================= -->
+
+<section id="ai" class="ai-banner">
+
+    <div>
+        <span>🤖 SMART RECOMMENDATION ENGINE</span>
+        <h2>Let AI Find Your Next Movie</h2>
+        <p>
+            Every movie is converted into a TF-IDF vector built from its
+            genres and plot. Cosine similarity then ranks the closest matches.
+        </p>
+    </div>
+
+    <a href="{{ url_for('movies_page') }}">Explore Movies →</a>
+
+</section>
+
+
+{% endblock %}

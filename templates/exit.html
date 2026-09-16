@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Goodbye | MovieFlix</title>
+
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body class="login-page">
+
+<div class="login-container">
+
+    <div class="login-card" style="text-align:center;">
+
+        <div class="exit-emoji">🎬</div>
+
+        <div class="login-logo"><span>Movie</span>Flix</div>
+
+        <h1 style="margin-top:26px;">Thank You! 👋</h1>
+
+        <p class="login-text" style="line-height:1.7;">
+            Thank you for using our
+            <strong style="color:#e50914;">Movie Recommendation System</strong>.
+            <br>
+            We hope you found your next favourite movie! 🍿
+        </p>
+
+        <div class="exit-note">
+            <div class="exit-note-title">🤖 AI POWERED</div>
+            <div class="exit-note-body">
+                Smart movie recommendations using
+                TF-IDF and cosine similarity.
+            </div>
+        </div>
+
+        <a href="{{ url_for('login') }}"
+           class="login-button"
+           style="display:block; text-decoration:none; text-align:center;">
+            🔐 Login Again
+        </a>
+
+        <div class="login-footer">
+            <p>🎬 MovieFlix</p>
+            <small>AI Movie Recommendation System</small><br>
+            <small>© 2026 College Project</small>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

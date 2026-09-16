@@ -1,0 +1,8 @@
+Flask>=3.0
+pandas>=2.0
+scikit-learn>=1.3
+Werkzeug>=3.0
+
+# Production WSGI server, used by hosts like Render / Railway.
+# Installed but unused on Windows (the .bat runs app.py directly).
+gunicorn>=21.2

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | MovieFlix</title>
+
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body class="login-page">
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <div class="login-logo">🎬 <span>Movie</span>Flix</div>
+
+        <p class="login-subtitle">AI Powered Movie Recommendation System</p>
+
+        <h1>Welcome Back</h1>
+
+        <p class="login-text">Sign in to continue to MovieFlix</p>
+
+        {% if registered %}
+            <div class="login-success">
+                Registration successful! Please login to continue.
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="login-error">{{ error }}</div>
+        {% endif %}
+
+        <form action="{{ url_for('login') }}" method="POST">
+
+            <label for="username">Username</label>
+            <input type="text"
+                   id="username"
+                   name="username"
+                   placeholder="Enter your username"
+                   value="{{ username if username else '' }}"
+                   autocomplete="username"
+                   autofocus
+                   required>
+
+            <label for="password">Password</label>
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Enter your password"
+                   autocomplete="current-password"
+                   required>
+
+            <div class="login-options">
+                <label class="remember">
+                    <input type="checkbox" name="remember" value="1">
+                    <span>Keep me signed in</span>
+                </label>
+            </div>
+
+            <button type="submit" class="login-button">Login →</button>
+
+        </form>
+
+        <div class="register-link">
+            <span>Don't have an account?</span>
+            <a href="{{ url_for('register') }}">Create Account</a>
+        </div>
+
+        <div class="login-footer">
+            <p>🎬 MovieFlix</p>
+            <small>AI Movie Recommendation System</small><br>
+            <small>© 2026 College Project</small>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

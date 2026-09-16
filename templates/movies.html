@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% set active_page = 'movies' %}
+
+{% block title %}
+    {%- if active_genre %}{{ active_genre }} Movies
+    {%- elif query %}Search: {{ query }}
+    {%- else %}All Movies
+    {%- endif %} | MovieFlix
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="page-head">
+
+    <h1>
+        {% if active_genre %}
+            <span>{{ active_genre }}</span> Movies
+        {% elif query %}
+            Results for <span>{{ query }}</span>
+        {% else %}
+            Movie <span>Collection</span>
+        {% endif %}
+    </h1>
+
+    <p>
+        {% if query %}
+            Every movie whose title, genre or story matches your search.
+        {% else %}
+            Browse the full library and open any title for AI recommendations.
+        {% endif %}
+    </p>
+
+    <form class="inline-search" action="{{ url_for('movies_page') }}" method="GET">
+        <input type="text"
+               name="q"
+               value="{{ query }}"
+               placeholder="Filter movies by name, genre or story..."
+               aria-label="Filter movies">
+        <button type="submit">Filter</button>
+        {% if query or active_genre %}
+            <a class="clear-filter" href="{{ url_for('movies_page') }}">Clear</a>
+        {% endif %}
+    </form>
+
+    <div class="pill-row">
+        <a class="genre-chip {{ 'active' if not active_genre and not query }}"
+           href="{{ url_for('movies_page') }}">All</a>
+
+        {% for genre in all_genres %}
+            <a class="genre-chip {{ 'active' if active_genre == genre }}"
+               href="{{ url_for('movies_page', genre=genre) }}">{{ genre }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="count-pill">🎬 {{ movies|length }} movies</div>
+
+</div>
+
+
+{% if movies %}
+
+    <div class="movie-grid">
+        {% for movie in movies %}
+            {% include "_movie_card.html" %}
+        {% endfor %}
+    </div>
+
+{% else %}
+
+    <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h2>No movies found</h2>
+        <p>Nothing in the library matches that filter. Try another genre or search term.</p>
+        <a class="primary-btn" href="{{ url_for('movies_page') }}">Show all movies</a>
+    </div>
+
+{% endif %}
+
+
+<div class="info-box">
+    <h2>🤖 How the recommendations work</h2>
+    <p>
+        MovieFlix turns each movie's genres and plot into a TF-IDF vector and
+        compares them with cosine similarity, so the titles it suggests share
+        real content with the one you opened — not just the same rating.
+    </p>
+</div>
+
+
+{% endblock %}

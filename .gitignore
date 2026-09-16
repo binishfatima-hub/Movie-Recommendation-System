@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Registered accounts — password hashes, not for the repo.
+# The app recreates this file the first time someone registers.
+users.json
+
+# Build cache for tools/build_dataset.py.
+# Not needed once dataset/movies.csv and static/posters/ are committed.
+tools/build_cache.json
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

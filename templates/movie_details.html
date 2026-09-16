@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% set active_page = 'movies' %}
+
+{% block title %}{{ movie.title }} | MovieFlix{% endblock %}
+
+
+{% block content %}
+
+
+<a href="{{ url_for('movies_page') }}" class="back-link">← Back to Movies</a>
+
+
+<!-- ================= HEADER ================= -->
+
+<div class="details-container">
+
+    <div class="details-poster">
+
+        <div class="poster-fallback">
+            <span class="fallback-icon">🎬</span>
+            <strong>{{ movie.title }}</strong>
+            <span class="fallback-tag">MOVIEFLIX</span>
+        </div>
+
+        {% if movie.poster %}
+            <img src="{{ url_for('static', filename=movie.poster) }}"
+                 alt="{{ movie.title }} poster"
+                 onerror="this.remove();">
+        {% endif %}
+
+    </div>
+
+
+    <div class="details-info">
+
+        <div class="rating-box">⭐ {{ '%.1f'|format(movie.rating) }}/10</div>
+
+        <h1>{{ movie.title }}</h1>
+
+        <div class="meta-row">
+            {% for genre in movie.genre.split(',') %}
+                {% if genre.strip() %}
+                    <a class="meta" href="{{ url_for('movies_page', genre=genre.strip()) }}">
+                        🎭 {{ genre.strip() }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            <span class="meta">📅 {{ movie.year }}</span>
+        </div>
+
+        <p class="description">{{ movie.description }}</p>
+
+        <div class="action-row">
+            {% if movie.trailer %}
+                <button type="button" class="watch-btn" onclick="playTrailer()">
+                    ▶ Watch Trailer
+                </button>
+            {% endif %}
+
+            <a href="{{ url_for('search', movie=movie.title) }}" class="secondary-btn">
+                🤖 Find Similar Movies
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TRAILER (plays right here) ================= -->
+
+<section class="trailer-section" id="trailer">
+
+    <h2>▶ {{ movie.title }} — Official Trailer</h2>
+
+    {% if movie.trailer %}
+
+        <div class="trailer-box" id="trailerBox">
+
+            {# The iframe is only inserted on click, so the page stays fast
+               and YouTube is not contacted until the user asks for it. #}
+            <button type="button"
+                    class="trailer-poster"
+                    id="trailerPoster"
+                    onclick="playTrailer()"
+                    aria-label="Play {{ movie.title }} trailer">
+
+                <img src="https://i.ytimg.com/vi/{{ movie.trailer }}/hqdefault.jpg"
+                     alt=""
+                     onerror="this.remove();">
+
+                <span class="trailer-play">▶</span>
+                <span class="trailer-caption">Play trailer</span>
+
+            </button>
+
+        </div>
+
+        <p class="trailer-note">
+            The trailer plays on this page — no new tab, no redirect.
+        </p>
+
+    {% else %}
+
+        <div class="trailer-box trailer-empty">
+            <div>
+                <div class="trailer-icon">🎬</div>
+                <h3>Trailer unavailable</h3>
+                <p>No trailer has been linked for this title yet.</p>
+            </div>
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- ================= SIMILAR MOVIES ================= -->
+
+{% if similar %}
+
+<section class="movie-section similar-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="small-title">AI RECOMMENDATIONS</span>
+            <h2>🎯 Because you opened {{ movie.title }}</h2>
+        </div>
+
+        <a href="{{ url_for('search', movie=movie.title) }}" class="view-all">See all →</a>
+    </div>
+
+    <div class="movie-grid">
+        {% for item in similar %}
+            {% with movie = item %}
+                {% include "_movie_card.html" %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<div class="info-box">
+    <h2>🤖 How MovieFlix AI works</h2>
+    <p>
+        The genres and plot of every movie are converted into numerical TF-IDF
+        features. Cosine similarity then measures the angle between those
+        vectors, and the closest ones are shown above as recommendations.
+    </p>
+</div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    function playTrailer() {
+
+        var box = document.getElementById("trailerBox");
+        if (!box || box.dataset.playing === "1") {
+            if (box) { box.scrollIntoView({ behavior: "smooth", block: "center" }); }
+            return;
+        }
+
+        var frame = document.createElement("iframe");
+
+        frame.src =
+            "https://www.youtube-nocookie.com/embed/{{ movie.trailer }}" +
+            "?autoplay=1&rel=0&modestbranding=1";
+
+        frame.title = {{ movie.title | tojson }} + " trailer";
+        frame.allow =
+            "accelerometer; autoplay; clipboard-write; encrypted-media; " +
+            "gyroscope; picture-in-picture";
+        frame.allowFullscreen = true;
+        frame.referrerPolicy = "strict-origin-when-cross-origin";
+
+        box.innerHTML = "";
+        box.appendChild(frame);
+        box.dataset.playing = "1";
+
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+</script>
+{% endblock %}

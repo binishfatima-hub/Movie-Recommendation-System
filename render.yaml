@@ -1,0 +1,18 @@
+# Render.com blueprint.
+#
+# On render.com: New -> Blueprint -> connect this GitHub repo.
+# Render reads this file and sets everything up on its own.
+
+services:
+  - type: web
+    name: movieflix
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
+    envVars:
+      # A random signing key for login sessions, generated once by Render.
+      - key: MOVIEFLIX_SECRET
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.12.7"

@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% set active_page = 'search' %}
+
+{% block title %}Movies like {{ movie }} | MovieFlix{% endblock %}
+
+
+{% block content %}
+
+
+<div class="page-head">
+
+    <span class="small-title">🤖 AI RECOMMENDATION ENGINE</span>
+
+    {% if matched %}
+        <h1>Movies similar to <span>{{ matched.title }}</span></h1>
+        <p>
+            The AI compared genres and plots across all {{ movie_total }} movies
+            and ranked the closest matches below.
+        </p>
+    {% else %}
+        <h1>Search results for <span>{{ movie }}</span></h1>
+        <p>No exact title matched, so here is everything related to your search.</p>
+    {% endif %}
+
+</div>
+
+
+{% if matched %}
+
+<!-- ================= THE MATCHED MOVIE ================= -->
+
+<section class="matched-strip">
+
+    <a class="matched-poster" href="{{ url_for('movie_details', movie_id=matched.id) }}">
+        <div class="poster-fallback">
+            <span class="fallback-icon">🎬</span>
+            <strong>{{ matched.title }}</strong>
+            <span class="fallback-tag">MOVIEFLIX</span>
+        </div>
+
+        {% if matched.poster %}
+            <img src="{{ url_for('static', filename=matched.poster) }}"
+                 alt="{{ matched.title }} poster"
+                 onerror="this.remove();">
+        {% endif %}
+    </a>
+
+    <div class="matched-info">
+        <span class="matched-tag">YOU SEARCHED FOR</span>
+        <h2>{{ matched.title }}</h2>
+
+        <div class="meta-row">
+            <span class="meta">⭐ {{ '%.1f'|format(matched.rating) }}</span>
+            <span class="meta">📅 {{ matched.year }}</span>
+            <span class="meta">🎭 {{ matched.genre }}</span>
+        </div>
+
+        <p class="description">{{ matched.description }}</p>
+
+        <a class="primary-btn"
+           href="{{ url_for('movie_details', movie_id=matched.id) }}">
+            ▶ Open &amp; watch trailer
+        </a>
+    </div>
+
+</section>
+
+{% endif %}
+
+
+{% if recommendations %}
+
+<section class="movie-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="small-title">RANKED BY SIMILARITY</span>
+            <h2>🎯 Recommended for you</h2>
+        </div>
+
+        <span class="view-all">{{ recommendations|length }} AI recommendations</span>
+    </div>
+
+    <div class="movie-grid">
+        {% for item in recommendations %}
+            {% with movie = item %}
+                {% include "_movie_card.html" %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+
+</section>
+
+{% endif %}
+
+
+{% if suggestions %}
+
+<section class="movie-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="small-title">TEXT SEARCH</span>
+            <h2>🔎 Movies matching "{{ movie }}"</h2>
+        </div>
+    </div>
+
+    <div class="movie-grid">
+        {% for item in suggestions %}
+            {% with movie = item %}
+                {% include "_movie_card.html" %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+
+</section>
+
+{% endif %}
+
+
+{% if not recommendations and not suggestions %}
+
+<div class="empty-state">
+    <div class="empty-icon">😔</div>
+    <h2>Nothing found for "{{ movie }}"</h2>
+    <p>
+        That title is not in the library yet. Browse the collection and pick a
+        movie to get AI recommendations.
+    </p>
+    <a class="primary-btn" href="{{ url_for('movies_page') }}">🎬 Browse all movies</a>
+</div>
+
+{% endif %}
+
+
+<!-- ================= SEARCH AGAIN ================= -->
+
+<section class="search-again">
+    <h2>Search another movie</h2>
+    <p>Type any title from the collection to get a fresh set of recommendations.</p>
+
+    <form action="{{ url_for('search') }}" method="GET">
+        <input type="text"
+               name="movie"
+               placeholder="Enter a movie name..."
+               aria-label="Search another movie"
+               required>
+        <button type="submit">🔍 Recommend</button>
+    </form>
+</section>
+
+
+{% endblock %}

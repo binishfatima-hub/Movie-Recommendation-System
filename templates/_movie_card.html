@@ -1,0 +1,49 @@
+{# Shared movie card. Expects `movie`; `movie.match` is optional. #}
+
+<article class="movie-card">
+
+    <a class="poster" href="{{ url_for('movie_details', movie_id=movie.id) }}">
+
+        {# The fallback sits underneath and shows through whenever the
+           image is missing or fails to load. #}
+        <div class="poster-fallback">
+            <span class="fallback-icon">🎬</span>
+            <strong>{{ movie.title }}</strong>
+            <span class="fallback-tag">MOVIEFLIX</span>
+        </div>
+
+        {% if movie.poster %}
+            <img src="{{ url_for('static', filename=movie.poster) }}"
+                 alt="{{ movie.title }} poster"
+                 loading="lazy"
+                 onerror="this.remove();">
+        {% endif %}
+
+        <span class="poster-overlay">
+            <span class="play-btn">▶</span>
+        </span>
+
+        <span class="rating">⭐ {{ '%.1f'|format(movie.rating) }}</span>
+
+        {% if movie.match is defined %}
+            <span class="ai-label">🤖 {{ movie.match }}% MATCH</span>
+        {% endif %}
+
+    </a>
+
+    <div class="movie-info">
+
+        <h3 title="{{ movie.title }}">{{ movie.title }}</h3>
+
+        <p class="movie-genre">{{ movie.genre }}</p>
+
+        <div class="card-bottom">
+            <span>📅 {{ movie.year }}</span>
+            <a class="details-link"
+               href="{{ url_for('search', movie=movie.title) }}"
+               title="Find similar movies">🤖 Similar</a>
+        </div>
+
+    </div>
+
+</article>
